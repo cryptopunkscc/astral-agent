@@ -15,6 +15,6 @@ pluginManagement {
     }
 }
 
-rootProject.name = "astral-gui"
+rootProject.name = "Astral Agent"
 
 include(":android", ":desktop", ":common")
