@@ -1,13 +1,13 @@
+package compose
+
+import ProcessInfo
 import androidx.compose.desktop.DesktopMaterialTheme
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -15,19 +15,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import cc.cryptopunks.astral.common.App
 import kotlin.system.exitProcess
 
-fun composeApplication() = application(false) {
-    Window(onCloseRequest = ::exitApplication) {
-        App()
-    }
-}
 
-fun killDetachedAstrald(
-    processes: MutableState<Collection<ProcessInfo>>,
+fun Collection<ProcessInfo>.killDetachedAstrald(
     kill: (Collection<ProcessInfo>) -> Collection<ProcessInfo>
 ): Boolean {
+    var processes by mutableStateOf(this)
     var shouldStart = false
     application(false) {
         DesktopMaterialTheme {
@@ -39,11 +33,11 @@ fun killDetachedAstrald(
                 icon = painterResource("ic_astral_launcher.svg")
             ) {
                 AstraldAlreadyRunningDialogContent(
-                    processes = processes.value,
+                    processes = processes,
                     start = ::exitApplication,
                     kill = {
-                        processes.value = kill(it).toList()
-                        shouldStart = processes.value.isEmpty()
+                        processes = kill(it).toList()
+                        shouldStart = processes.isEmpty()
                     },
                 )
             }

@@ -12,8 +12,8 @@ fun main() {
     val tray = astralTray(events)
 
     tray.setEnabled(false)
-    if (shouldStartAstrald()) {
-        val astraldProcess = startAstrald()
+    if (Astrald.shouldStart()) {
+        val astraldProcess = Astrald.start()
         finalizers.add {
             val code = astraldProcess.sigint().waitFor()
             println("astrald sigint $code")

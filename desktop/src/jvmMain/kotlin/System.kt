@@ -7,6 +7,8 @@ import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.io.IOException
 
+val userHome get() = File(System.getProperty("user.home"))
+
 fun File.exec() = absolutePath.exec()
 fun String.exec(): Process = Runtime.getRuntime().exec(this)
 fun Array<String>.exec(): Process = Runtime.getRuntime().exec(this)
