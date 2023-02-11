@@ -1,3 +1,5 @@
+@file:JvmName("Astral Agent")
+
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first

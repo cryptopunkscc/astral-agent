@@ -35,7 +35,7 @@ kotlin {
 
 compose.desktop {
     application {
-        mainClass = "MainKt"
+        mainClass = "Astral Agent"
         nativeDistributions {
             targetFormats(
                 TargetFormat.Deb,
@@ -43,7 +43,7 @@ compose.desktop {
                 TargetFormat.Dmg,
                 TargetFormat.Msi,
             )
-            packageName = "astral-agent"
+            packageName = mainClass
             packageVersion = "1.0.0"
 
             appResourcesRootDir.set(project.layout.projectDirectory.dir("build/go/bin/"))
