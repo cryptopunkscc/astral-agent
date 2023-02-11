@@ -1,3 +1,4 @@
+import compose.astralAgentSettings
 import dorkbox.systemTray.MenuItem
 import dorkbox.systemTray.SystemTray
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -13,6 +14,12 @@ fun astralTray(
     systemTray.setImage(jarResource("ic_astral_symbolic_white.svg"))
 
     systemTray.status = "Astral Agent"
+
+    systemTray.menu.add(JSeparator())
+
+    systemTray.menu.add(MenuItem("Settings") {
+        astralAgentSettings()
+    })
 
     systemTray.menu.add(JSeparator())
 
