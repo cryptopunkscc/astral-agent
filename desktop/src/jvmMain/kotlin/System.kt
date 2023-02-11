@@ -1,11 +1,10 @@
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.buffer
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.io.IOException
+import java.nio.file.*
 
 val userHome get() = File(System.getProperty("user.home"))
 
@@ -76,3 +75,26 @@ data class ProcessInfo(
 )
 
 fun ProcessInfo.sigint() = pid.sigint()
+
+fun File.observeFileChanges(): Flow<Long> = channelFlow {
+    Thread {
+        FileSystems.getDefault().newWatchService().use { watchService: WatchService ->
+            val watchKey: WatchKey = FileSystems.getDefault()
+                .getPath(parentFile.absolutePath)
+                .register(watchService, arrayOf(StandardWatchEventKinds.ENTRY_MODIFY))
+
+            while (!channel.isClosedForSend) {
+                for (event in watchKey.pollEvents()) {
+                    val sent = trySend(lastModified())
+                    if (sent.isFailure)
+                        break
+                }
+
+                if (!watchKey.reset())
+                    channel.close()
+            }
+        }
+    }.start()
+
+    awaitClose()
+}.distinctUntilChanged()

@@ -5,10 +5,11 @@ Graphical user interface and wrapper for astral daemon.
 **This project is in early development stage.**
 
 ## Features
+* Debian installation package.
 * Astral daemon embedded.
 * Running attached or detached astral daemon.
 * System tray.
-* Debian installation package.
+* Launch on boot.
 
 ## Roadmap
 * Notifications

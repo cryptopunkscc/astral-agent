@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Exec="/opt/astral-agent/bin/Astral Agent"
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=Astral Agent
+Comment=
