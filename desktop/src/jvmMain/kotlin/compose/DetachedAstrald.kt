@@ -18,7 +18,7 @@ import androidx.compose.ui.window.application
 import kotlin.system.exitProcess
 
 
-fun Collection<ProcessInfo>.killDetachedAstrald(
+fun Collection<ProcessInfo>.closeDetachedAstrald(
     kill: (Collection<ProcessInfo>) -> Collection<ProcessInfo>
 ): Boolean {
     var processes by mutableStateOf(this)
@@ -32,7 +32,7 @@ fun Collection<ProcessInfo>.killDetachedAstrald(
                 },
                 icon = painterResource("ic_astral_launcher.svg")
             ) {
-                AstraldAlreadyRunningDialogContent(
+                DetachedAstraldScreen(
                     processes = processes,
                     start = ::exitApplication,
                     kill = {
@@ -49,9 +49,9 @@ fun Collection<ProcessInfo>.killDetachedAstrald(
 @ExperimentalMaterialApi
 @Preview
 @Composable
-fun AstraldAlreadyRunningDialogPreview() {
+fun DetachedAstraldScreenPreview() {
     DesktopMaterialTheme {
-        AstraldAlreadyRunningDialogContent(
+        DetachedAstraldScreen(
             listOf(
                 ProcessInfo(
                     user = "root",
@@ -64,7 +64,7 @@ fun AstraldAlreadyRunningDialogPreview() {
 }
 
 @Composable
-fun AstraldAlreadyRunningDialogContent(
+fun DetachedAstraldScreen(
     processes: Collection<ProcessInfo>,
     start: () -> Unit = {},
     kill: (Collection<ProcessInfo>) -> Unit = {}

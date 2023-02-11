@@ -1,11 +1,11 @@
-import compose.killDetachedAstrald
+import compose.closeDetachedAstrald
 import java.io.File
 
 object Astrald {
     fun shouldStart(): Boolean =
         detachedAstraldProcesses().run {
-            isEmpty() || killDetachedAstrald { selected ->
-                selected.tryKill()
+            isEmpty() || closeDetachedAstrald { selected ->
+                selected.tryClose()
             }
         }
 
@@ -17,7 +17,7 @@ object Astrald {
 
 private fun detachedAstraldProcesses(): List<ProcessInfo> = processInfo("astrald")
 
-private fun Iterable<ProcessInfo>.tryKill(): List<ProcessInfo> {
+private fun Iterable<ProcessInfo>.tryClose(): List<ProcessInfo> {
     forEach { process -> process.sigint() }
     Thread.sleep(1000)
     return detachedAstraldProcesses()
