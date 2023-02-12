@@ -1,12 +1,10 @@
 import compose.astralAgentSettings
 import dorkbox.systemTray.MenuItem
 import dorkbox.systemTray.SystemTray
-import kotlinx.coroutines.flow.MutableSharedFlow
 import javax.swing.JSeparator
 
-fun astralTray(
-    events: MutableSharedFlow<Event>
-) : SystemTray {
+fun Application.astralTray() : SystemTray {
+
     SystemTray.AUTO_SIZE = false
 
     val systemTray: SystemTray = SystemTray.get() ?: throw RuntimeException("Unable to load SystemTray!")

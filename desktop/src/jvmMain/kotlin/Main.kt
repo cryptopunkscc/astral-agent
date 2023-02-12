@@ -1,40 +1,17 @@
 @file:JvmName("Astral Agent")
 
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
+import gnome.GnomeAutostart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import nix.NixPlatform
 import kotlin.system.exitProcess
 
 fun main() {
-    val events = MutableSharedFlow<Event>(extraBufferCapacity = 64)
-    val finalizers = mutableListOf<() -> Unit>()
-
-    println("starting tray")
-    val tray = astralTray(events)
-
-    tray.setEnabled(false)
-    if (Astrald.shouldStart()) {
-        val astraldProcess = Astrald.start()
-        finalizers.add {
-            val code = astraldProcess.sigint().waitFor()
-            println("astrald sigint $code")
-        }
-        Thread {
-            astraldProcess.waitFor()
-            events.tryEmit(Close(astraldProcess))
-        }.start()
-        tray.status = "Astral connected"
-    } else {
-        tray.status = "Astral detached"
-    }
-
-    tray.setEnabled(true)
-    runBlocking {
-        events.filterIsInstance<Close>().first()
-        println("received close event")
-    }
-    for (finalize in finalizers) finalize()
-    println("finalized")
+    val coroutineContext = SupervisorJob() + Dispatchers.IO
+    val platform = NixPlatform(coroutineContext)
+    Application(
+        platform = NixPlatform(coroutineContext),
+        autostart = GnomeAutostart(platform)
+    ).runBlocking()
     exitProcess(0)
 }

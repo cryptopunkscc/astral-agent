@@ -1,5 +1,6 @@
 package compose
 
+import Application
 import Autostart
 import androidx.compose.desktop.DesktopMaterialTheme
 import androidx.compose.desktop.ui.tooling.preview.Preview
@@ -16,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 
-fun astralAgentSettings() {
+fun Application.astralAgentSettings() {
     application(false) {
         DesktopMaterialTheme {
             Window(
@@ -34,12 +35,12 @@ fun astralAgentSettings() {
 @Composable
 fun SettingsScreenPreview() {
     DesktopMaterialTheme {
-        SettingsScreen()
+        Application.Empty.SettingsScreen()
     }
 }
 
 @Composable
-fun SettingsScreen() {
+fun Application.SettingsScreen() {
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
@@ -49,21 +50,23 @@ fun SettingsScreen() {
             style = MaterialTheme.typography.h4,
             textAlign = TextAlign.Center,
         )
-        AutostartOption()
+        AutostartOption(autostart)
     }
 }
 
 @Composable
-fun AutostartOption() {
+fun AutostartOption(
+    autostart: Autostart,
+) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        val enabled by Autostart.run { collectAsState(enabled) }
+        val enabled by autostart.run { collectAsState(enabled) }
         Checkbox(
             checked = enabled,
             onCheckedChange = { enable ->
-                Autostart(enable)
+                autostart(enable)
             }
         )
         Text(
