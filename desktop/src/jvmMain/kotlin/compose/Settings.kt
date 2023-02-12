@@ -1,7 +1,7 @@
 package compose
 
-import Application
-import Autostart
+import core.Application
+import core.Autostart
 import androidx.compose.desktop.DesktopMaterialTheme
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
@@ -33,14 +33,14 @@ fun Application.astralAgentSettings() = launchApplication {
 
 @Preview
 @Composable
-fun SettingsScreenPreview() {
+private fun SettingsScreenPreview() {
     DesktopMaterialTheme {
         Application.Empty.SettingsScreen()
     }
 }
 
 @Composable
-fun Application.SettingsScreen() {
+private fun Application.SettingsScreen() {
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
@@ -55,7 +55,7 @@ fun Application.SettingsScreen() {
 }
 
 @Composable
-fun AutostartOption(
+private fun AutostartOption(
     autostart: Autostart,
 ) {
     Row(

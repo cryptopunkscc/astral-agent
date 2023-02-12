@@ -1,15 +1,14 @@
 package nix
 
-import ProcessInfo
-import jvm.JvmPlatform
+import core.ProcessInfo
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import java.io.File
 import kotlin.coroutines.CoroutineContext
 
-class NixPlatform(
+class Platform(
     coroutineContext: CoroutineContext
-) : JvmPlatform(coroutineContext) {
+) : jvm.Platform(coroutineContext) {
 
     override val astraldExecutable: File get() = userHome.resolve(".local/bin/astrald")
 

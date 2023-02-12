@@ -1,15 +1,19 @@
 package gnome
 
-import Autostart
-import Platform
-import jarResourceStream
+import core.Platform
+import core.Resources
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 
-class GnomeAutostart(
+class Autostart(
     platform: Platform,
-) : Autostart,
-    Platform by platform {
+    resources: Resources,
+) : core.Autostart,
+    Platform by platform,
+    Resources by resources {
 
     private val file get() = userHome.resolve(".config").resolve(DESKTOP_FILE_PATH)
 

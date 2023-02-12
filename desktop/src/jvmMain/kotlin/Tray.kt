@@ -1,4 +1,6 @@
 import compose.astralAgentSettings
+import core.Application
+import core.Close
 import dorkbox.systemTray.MenuItem
 import dorkbox.systemTray.SystemTray
 import javax.swing.JSeparator
@@ -28,7 +30,7 @@ fun Application.astralTray() : SystemTray {
         events.tryEmit(Close(systemTray))
         // v4.2.1 https://github.com/dorkbox/SystemTray/issues/181
 //        systemTray.shutdown {
-//            events.tryEmit(Close(systemTray))
+//            events.tryEmit(core.Close(systemTray))
 //        }
     }).shortcut = 'q' // case does not matter
 

@@ -1,7 +1,5 @@
 package compose
 
-import Astrald
-import ProcessInfo
 import androidx.compose.desktop.DesktopMaterialTheme
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
@@ -16,12 +14,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.awaitApplication
+import core.Astrald
+import core.ProcessInfo
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlin.system.exitProcess
 
+suspend fun Astrald.shouldStart(): Boolean =
+    listDetached().let { list ->
+        list.isEmpty() || closeDetachedAstrald(list) { selected ->
+            selected.tryClose()
+        }.await()
+    }
 
-fun Astrald.closeDetachedAstrald(
+private fun CoroutineScope.closeDetachedAstrald(
     detached: Collection<ProcessInfo>,
     kill: (Collection<ProcessInfo>) -> Collection<ProcessInfo>
 ): Deferred<Boolean> = async {
@@ -53,7 +60,7 @@ fun Astrald.closeDetachedAstrald(
 @ExperimentalMaterialApi
 @Preview
 @Composable
-fun DetachedAstraldScreenPreview() {
+private fun DetachedAstraldScreenPreview() {
     DesktopMaterialTheme {
         DetachedAstraldScreen(
             listOf(
@@ -68,7 +75,7 @@ fun DetachedAstraldScreenPreview() {
 }
 
 @Composable
-fun DetachedAstraldScreen(
+private fun DetachedAstraldScreen(
     processes: Collection<ProcessInfo>,
     start: () -> Unit = {},
     kill: (Collection<ProcessInfo>) -> Unit = {}

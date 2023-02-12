@@ -1,7 +1,6 @@
 package jvm
 
-import Platform
-import ProcessInfo
+import core.ProcessInfo
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer
@@ -16,9 +15,9 @@ import java.nio.file.WatchKey
 import java.nio.file.WatchService
 import kotlin.coroutines.CoroutineContext
 
-abstract class JvmPlatform(
+abstract class Platform(
     override val coroutineContext: CoroutineContext
-) : Platform {
+) : core.Platform {
 
     override val userHome: File get() = File(System.getProperty("user.home"))
 

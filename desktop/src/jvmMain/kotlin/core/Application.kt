@@ -1,17 +1,24 @@
+package core
+
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 class Application(
     platform: Platform,
+    resources: Resources,
     val autostart: Autostart,
-    val astrald: Astrald = Astrald(platform),
-) : Platform by platform {
+    val astrald: Astrald = Astrald(
+        platform = platform,
+        resources = resources,
+    ),
+) : Platform by platform,
+    Resources by resources {
     val events = MutableSharedFlow<Event>(extraBufferCapacity = 64)
     val finalizers = mutableListOf<() -> Unit>()
     companion object {
         val Empty = Application(
             platform = Platform.Empty,
-            astrald = Astrald(Platform.Empty),
             autostart = Autostart.Empty,
+            resources = Resources.Empty,
         )
     }
 }

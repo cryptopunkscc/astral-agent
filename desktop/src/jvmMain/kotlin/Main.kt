@@ -1,17 +1,19 @@
 @file:JvmName("Astral Agent")
 
-import gnome.GnomeAutostart
+import core.Application
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import nix.NixPlatform
 import kotlin.system.exitProcess
 
 fun main() {
     val coroutineContext = SupervisorJob() + Dispatchers.IO
-    val platform = NixPlatform(coroutineContext)
+    val platform = nix.Platform(coroutineContext)
+    val resources = jvm.Resources(object {})
+    val autostart = gnome.Autostart(platform, resources)
     Application(
-        platform = NixPlatform(coroutineContext),
-        autostart = GnomeAutostart(platform)
+        platform = platform,
+        autostart = autostart,
+        resources = resources,
     ).runBlocking()
     exitProcess(0)
 }
