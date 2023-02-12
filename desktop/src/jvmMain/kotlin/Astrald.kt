@@ -4,11 +4,11 @@ import java.io.File
 class Astrald(
     platform: Platform
 ) : Platform by platform {
-    fun shouldStart(): Boolean =
-        detachedAstraldProcesses().run {
-            isEmpty() || closeDetachedAstrald { selected ->
+    suspend fun shouldStart(): Boolean =
+        detachedAstraldProcesses().let { list ->
+            list.isEmpty() || closeDetachedAstrald(list) { selected ->
                 selected.tryClose()
-            }
+            }.await()
         }
 
     fun start(): Process = astraldExecutable

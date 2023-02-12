@@ -1,5 +1,7 @@
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 fun Application.runBlocking(): Unit = runBlocking {
@@ -14,20 +16,18 @@ fun Application.runBlocking(): Unit = runBlocking {
             val code = astraldProcess.sigint().sysOut().sysErr().waitFor()
             println("astrald sigint $code")
         }
-        Thread {
+        launch(Dispatchers.IO) {
             astraldProcess.waitFor()
-            events.tryEmit(Close(astraldProcess))
-        }.start()
+            events.emit(Close(astraldProcess))
+        }
         tray.status = "Astral connected"
     } else {
         tray.status = "Astral detached"
     }
 
     tray.setEnabled(true)
-    runBlocking {
-        events.filterIsInstance<Close>().first()
-        println("received close event")
-    }
+    events.filterIsInstance<Close>().first()
+    println("received close event")
     for (finalize in finalizers) finalize()
     println("finalized")
 }

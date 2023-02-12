@@ -8,25 +8,25 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Checkbox
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
+import androidx.compose.ui.window.launchApplication
 
-fun Application.astralAgentSettings() {
-    application(false) {
-        DesktopMaterialTheme {
-            Window(
-                title = "Astral Agent",
-                onCloseRequest = ::exitApplication,
-                icon = painterResource("ic_astral_launcher.svg"),
-            ) {
-                SettingsScreen()
-            }
+fun Application.astralAgentSettings() = launchApplication {
+    DesktopMaterialTheme {
+        Window(
+            title = "Astral Agent",
+            onCloseRequest = ::exitApplication,
+            icon = painterResource("ic_astral_launcher.svg"),
+        ) {
+            SettingsScreen()
         }
     }
 }

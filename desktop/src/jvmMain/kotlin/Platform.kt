@@ -1,7 +1,9 @@
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
-interface Platform {
+interface Platform : CoroutineScope {
 
     // File
     val userHome: File
@@ -24,6 +26,7 @@ interface Platform {
     fun ProcessInfo.sigint(): Process = pid.sigint()
 
     object Empty : Platform {
+        override val coroutineContext = SupervisorJob()
         override val userHome: File get() = throw NotImplementedError()
         override val astraldExecutable: File get() = throw NotImplementedError()
         override fun File.observeFileChanges(): Flow<Long> = throw NotImplementedError()

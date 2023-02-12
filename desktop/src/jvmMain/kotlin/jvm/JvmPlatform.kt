@@ -2,7 +2,6 @@ package jvm
 
 import Platform
 import ProcessInfo
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer
@@ -19,7 +18,7 @@ import kotlin.coroutines.CoroutineContext
 
 abstract class JvmPlatform(
     override val coroutineContext: CoroutineContext
-) : Platform, CoroutineScope {
+) : Platform {
 
     override val userHome: File get() = File(System.getProperty("user.home"))
 
@@ -55,23 +54,26 @@ abstract class JvmPlatform(
     override fun Process.readText(): String = inputStream.reader().useLines { it.first() }
 
     override fun Process.lines(): Flow<String> = channelFlow {
-        invokeOnClose {
-            if (isAlive)
-                sigint()
-        }
         launch {
             errorStream.reader().readText().let { text ->
                 if (text.isNotBlank()) {
                     val message = info().command().map { "$it: $text" }.orElse(text)
                     throw IOException(message)
                 }
-
             }
         }
-        inputStream.reader().useLines { lines ->
-            lines.forEach { line ->
-                trySend(line)
+        launch {
+            inputStream.reader().useLines { lines ->
+                lines.forEach { line ->
+                    send(line)
+                }
             }
+            channel.close()
+        }
+        awaitClose {
+            if (isAlive)
+                sigint()
+                    .waitFor()
         }
     }.buffer(512)
 

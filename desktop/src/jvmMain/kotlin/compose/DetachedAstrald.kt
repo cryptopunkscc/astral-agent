@@ -1,5 +1,6 @@
 package compose
 
+import Astrald
 import ProcessInfo
 import androidx.compose.desktop.DesktopMaterialTheme
 import androidx.compose.desktop.ui.tooling.preview.Preview
@@ -14,16 +15,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
+import androidx.compose.ui.window.awaitApplication
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlin.system.exitProcess
 
 
-fun Collection<ProcessInfo>.closeDetachedAstrald(
+fun Astrald.closeDetachedAstrald(
+    detached: Collection<ProcessInfo>,
     kill: (Collection<ProcessInfo>) -> Collection<ProcessInfo>
-): Boolean {
-    var processes by mutableStateOf(this)
+): Deferred<Boolean> = async {
+    var processes by mutableStateOf(detached)
     var shouldStart = false
-    application(false) {
+    awaitApplication {
         DesktopMaterialTheme {
             Window(
                 title = "Astral Agent",
@@ -43,7 +47,7 @@ fun Collection<ProcessInfo>.closeDetachedAstrald(
             }
         }
     }
-    return shouldStart
+    shouldStart
 }
 
 @ExperimentalMaterialApi
