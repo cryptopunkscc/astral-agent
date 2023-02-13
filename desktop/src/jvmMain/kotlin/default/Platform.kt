@@ -1,4 +1,4 @@
-package jvm
+package default
 
 import core.ProcessInfo
 import kotlinx.coroutines.channels.awaitClose

@@ -8,7 +8,7 @@ import kotlin.coroutines.CoroutineContext
 
 class Platform(
     coroutineContext: CoroutineContext
-) : jvm.Platform(coroutineContext) {
+) : default.Platform(coroutineContext) {
 
     override val astraldExecutable: File get() = userHome.resolve(".local/bin/astrald")
 

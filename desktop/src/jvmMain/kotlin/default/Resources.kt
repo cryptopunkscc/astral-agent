@@ -1,4 +1,4 @@
-package jvm
+package default
 
 import core.Application
 import java.io.File
