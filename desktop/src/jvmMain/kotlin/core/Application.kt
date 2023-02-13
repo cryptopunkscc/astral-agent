@@ -1,6 +1,7 @@
 package core
 
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlin.coroutines.CoroutineContext
 
 class Application(
     platform: Platform,
@@ -21,4 +22,5 @@ class Application(
             resources = Resources.Empty,
         )
     }
+    object Root : CoroutineContext.Key<CoroutineContext.Element>
 }

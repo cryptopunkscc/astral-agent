@@ -83,4 +83,8 @@ abstract class Platform(
     abstract override fun Long.sigint(): Process
 
     abstract override fun processInfo(name: String): List<ProcessInfo>
+
+    companion object {
+        val OS_NAME: String get() = System.getProperty("os.name")
+    }
 }
