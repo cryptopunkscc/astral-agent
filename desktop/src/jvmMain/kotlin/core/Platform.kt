@@ -9,7 +9,9 @@ interface Platform : CoroutineScope {
 
     // File
     val userHome: File
-    val astraldExecutable: File
+    val astraldCmd: String
+    val defaultAstrald: File
+
     fun File.observeFileChanges(): Flow<Long>
 
     // Process
@@ -30,7 +32,8 @@ interface Platform : CoroutineScope {
     object Empty : Platform {
         override val coroutineContext = SupervisorJob()
         override val userHome: File get() = throw NotImplementedError()
-        override val astraldExecutable: File get() = throw NotImplementedError()
+        override val astraldCmd: String get() = throw NotImplementedError()
+        override val defaultAstrald: File get() = throw NotImplementedError()
         override fun File.observeFileChanges(): Flow<Long> = throw NotImplementedError()
         override fun File.exec(): Process = throw NotImplementedError()
         override fun String.exec(): Process = throw NotImplementedError()

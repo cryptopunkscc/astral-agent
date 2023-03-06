@@ -11,8 +11,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowPosition
+import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.awaitApplication
 import core.Astrald
 import core.ProcessInfo
@@ -23,7 +26,7 @@ import kotlin.system.exitProcess
 
 suspend fun Astrald.shouldStart(): Boolean =
     listDetached().let { list ->
-        list.isEmpty() || closeDetachedAstrald(list) { selected ->
+        list.isEmpty() || closeDetachedAstraldSimple(list) { selected ->
             selected.tryClose()
         }.await()
     }
@@ -150,6 +153,82 @@ private fun DetachedAstraldScreen(
                     else "continue detached"
                 )
             }
+        }
+    }
+}
+
+
+private fun CoroutineScope.closeDetachedAstraldSimple(
+    detached: Collection<ProcessInfo>,
+    kill: (Collection<ProcessInfo>) -> Collection<ProcessInfo>
+): Deferred<Boolean> = async {
+    var remaining: Collection<ProcessInfo> = detached
+    awaitApplication {
+        DesktopMaterialTheme {
+            Window(
+                title = "Astral Agent",
+                onCloseRequest = {
+                    exitProcess(0)
+                },
+                icon = painterResource("ic_astral_launcher.svg"),
+                alwaysOnTop = true,
+                state = WindowState(
+                    size = DpSize(888.dp, 444.dp),
+                    position = WindowPosition.Aligned(Alignment.Center)
+                )
+            ) {
+                DetachedAstraldSimpleScreen(
+                    cancel = {
+                        exitProcess(0)
+                    },
+                    accept = {
+                        remaining = kill(detached)
+                        if (remaining.isEmpty())
+                            exitApplication()
+                    },
+                )
+            }
+        }
+    }
+    remaining.isEmpty()
+}
+
+@Preview
+@Composable
+private fun DetachedAstraldSimpleScreenPreview() {
+    DesktopMaterialTheme {
+        DetachedAstraldSimpleScreen()
+    }
+}
+
+@Composable
+private fun DetachedAstraldSimpleScreen(
+    accept: () -> Unit = {},
+    cancel: () -> Unit = {}
+) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            text = "Detached astrald process detected",
+            style = MaterialTheme.typography.h4,
+            textAlign = TextAlign.Center,
+        )
+        Text(
+            modifier = Modifier.padding(vertical = 32.dp),
+            text = "Agent cannot continue because another astrald process is already running in background.\n " +
+                    "Press continue to kill currently running astrald and start new process attached to the agent.",
+            textAlign = TextAlign.Center,
+        )
+        Spacer(Modifier.height(32.dp))
+        Row(
+//            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            OutlinedButton(cancel) { Text("cancel") }
+            Button(accept) { Text("continue") }
         }
     }
 }

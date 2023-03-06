@@ -16,12 +16,14 @@ class Astrald(
         ConfigError,   // An invalid or non-existent config file provided
     }
 
-    fun start(): Process = astraldExecutable
-        .apply { copyAstraldIfNeeded() }
-        .exec()
-        .sysOut().sysErr()
+    fun start(
+        cmd: String = astraldCmd
+    ): Process = when {
+        cmd.isNotBlank() -> cmd.exec()
+        else -> defaultAstrald.apply { copyAstraldIfNeeded() }.exec()
+    }.sysOut().sysErr()
 
-    fun listDetached(): List<ProcessInfo> = processInfo("astrald")
+    fun listDetached(): List<ProcessInfo> = processInfo(ASTRALD)
 
     fun Iterable<ProcessInfo>.tryClose(): List<ProcessInfo> {
         forEach { process -> process.sigint() }
@@ -35,5 +37,9 @@ class Astrald(
             .setExecutable(true, true)
     }
 
-    private val astraldEmbedded get() = composeResourcesDir.resolve("astrald")
+    private val astraldEmbedded get() = composeResourcesDir.resolve(ASTRALD)
+
+    companion object {
+        const val ASTRALD = "astrald"
+    }
 }

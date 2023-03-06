@@ -1,5 +1,6 @@
 package nix
 
+import core.Astrald
 import core.ProcessInfo
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
@@ -10,8 +11,8 @@ class Platform(
     coroutineContext: CoroutineContext
 ) : default.Platform(coroutineContext) {
 
-    override val astraldExecutable: File get() = userHome.resolve(".local/bin/astrald")
-
+    override val defaultAstrald: File get() = userHome.resolve(".local/bin/astrald")
+    override val astraldCmd: String get() = "which ${Astrald.ASTRALD}".exec().readText()
     override fun Long.sigint(): Process = "kill -s SIGINT $this".exec()
 
     override fun processInfo(name: String): List<ProcessInfo> = runBlocking {
