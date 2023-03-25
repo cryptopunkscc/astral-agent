@@ -15,9 +15,9 @@ interface Platform : CoroutineScope {
     fun File.observeFileChanges(): Flow<Long>
 
     // Process
-    fun File.exec(): Process
-    fun String.exec(): Process
-    fun Array<String>.exec(): Process
+    fun File.exec(env: Map<String, String> = emptyMap()): Process
+    fun String.exec(env: Map<String, String> = emptyMap()): Process
+    fun List<String>.exec(env: Map<String, String> = emptyMap()): Process
     fun Process.readText(): String
     fun Process.lines(): Flow<String>
     fun Process.sysOut(): Process
@@ -35,9 +35,9 @@ interface Platform : CoroutineScope {
         override val astraldCmd: String get() = throw NotImplementedError()
         override val defaultAstrald: File get() = throw NotImplementedError()
         override fun File.observeFileChanges(): Flow<Long> = throw NotImplementedError()
-        override fun File.exec(): Process = throw NotImplementedError()
-        override fun String.exec(): Process = throw NotImplementedError()
-        override fun Array<String>.exec(): Process = throw NotImplementedError()
+        override fun File.exec(env: Map<String, String>): Process = throw NotImplementedError()
+        override fun String.exec(env: Map<String, String>): Process = throw NotImplementedError()
+        override fun List<String>.exec(env: Map<String, String>): Process = throw NotImplementedError()
         override fun Process.readText(): String = throw NotImplementedError()
         override fun Process.lines(): Flow<String> = throw NotImplementedError()
         override fun Process.sysOut(): Process = throw NotImplementedError()

@@ -4,14 +4,16 @@ go 1.19
 
 require (
 	github.com/btcsuite/btcd v0.21.0-beta // indirect
-	github.com/cryptopunkscc/astrald v0.0.0-20230129154856-cf4f052a9c7f // indirect
+	github.com/btcsuite/btcd/btcec/v2 v2.1.3 // indirect
+	github.com/cryptopunkscc/astrald v0.0.0-20230228192707-aed9639ddbb7 // indirect
+	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.1.0 // indirect
 	github.com/edsrzf/mmap-go v1.1.0 // indirect
 	github.com/godbus/dbus/v5 v5.0.6 // indirect
 	github.com/jxskiss/base62 v1.0.0 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0 // indirect
-	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a // indirect
-	golang.org/x/net v0.0.0-20210805182204-aaa1db679c0d // indirect
-	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
+	golang.org/x/crypto v0.5.0 // indirect
+	golang.org/x/net v0.5.0 // indirect
+	golang.org/x/sys v0.4.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	modernc.org/b v1.0.3 // indirect
 	modernc.org/db v1.0.5 // indirect

@@ -17,4 +17,9 @@ pluginManagement {
 
 rootProject.name = "Astral Agent"
 
-include(":android", ":desktop", ":common")
+include(
+    ":android",
+    ":desktop",
+    ":common",
+    ":client",
+)

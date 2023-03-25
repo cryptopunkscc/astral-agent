@@ -3,6 +3,7 @@ package core
 import java.io.File
 
 class Astrald(
+    config: Config,
     platform: Platform,
     resources: Resources,
 ) : Platform by platform,
@@ -16,12 +17,16 @@ class Astrald(
         ConfigError,   // An invalid or non-existent config file provided
     }
 
+    private val env = mapOf(
+        ASTRALD_AGENT_COOKIE to config.cookie
+    )
+
     fun start(
         cmd: String = astraldCmd
     ): Process = when {
-        cmd.isNotBlank() -> cmd.exec()
-        else -> defaultAstrald.apply { copyAstraldIfNeeded() }.exec()
-    }.sysOut().sysErr()
+        cmd.isNotBlank() -> cmd
+        else -> defaultAstrald.apply { copyAstraldIfNeeded() }.absolutePath
+    }.exec(env).sysOut().sysErr()
 
     fun listDetached(): List<ProcessInfo> = processInfo(ASTRALD)
 
@@ -41,5 +46,6 @@ class Astrald(
 
     companion object {
         const val ASTRALD = "astrald"
+        const val ASTRALD_AGENT_COOKIE = "ASTRALD_AGENT_COOKIE"
     }
 }

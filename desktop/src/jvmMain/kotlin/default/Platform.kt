@@ -44,13 +44,15 @@ abstract class Platform(
         awaitClose()
     }.distinctUntilChanged()
 
-    override fun File.exec(): Process = absolutePath.exec()
+    override fun File.exec(env: Map<String, String>): Process = absolutePath.exec(emptyMap())
 
-    override fun String.exec(): Process = Runtime.getRuntime().exec(this)
+    override fun String.exec(env: Map<String, String>): Process = split(' ', '\n').exec(env)
 
-    override fun Array<String>.exec(): Process = Runtime.getRuntime().exec(this)
+    override fun List<String>.exec(env: Map<String, String>): Process = ProcessBuilder(this).apply {
+        environment().putAll(env)
+    }.start()
 
-    override fun Process.readText(): String = inputStream.reader().useLines { it.first() }
+    override fun Process.readText(): String = inputStream.reader().useLines { it.firstOrNull().orEmpty() }
 
     override fun Process.lines(): Flow<String> = channelFlow {
         launch {

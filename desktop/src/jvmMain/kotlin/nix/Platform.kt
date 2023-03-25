@@ -14,9 +14,8 @@ class Platform(
     override val defaultAstrald: File get() = userHome.resolve(".local/bin/astrald")
     override val astraldCmd: String get() = "which ${Astrald.ASTRALD}".exec().readText()
     override fun Long.sigint(): Process = "kill -s SIGINT $this".exec()
-
     override fun processInfo(name: String): List<ProcessInfo> = runBlocking {
-        arrayOf("/bin/bash", "-c", "ps aux | grep $name").exec().lines().toList().run {
+        listOf("/bin/bash", "-c", "ps aux | grep $name").exec().lines().toList().run {
             when {
                 size < 3 -> emptyList()
                 else -> {
