@@ -19,7 +19,22 @@ rootProject.name = "Astral Agent"
 
 include(
     ":android",
-    ":desktop",
+//    ":desktop",
     ":common",
     ":client",
+
+    ":mobile:android:mod",
+    ":mobile:android:mod:notify",
+    ":mobile:android:mod:content",
+    ":mobile:android:intent",
+//    ":mobile:android:node",
+    ":mobile:android:wrapper",
+    ":mobile:android:service",
+    ":mobile:android:ui:theme",
+    ":mobile:android:ui:main",
+    ":mobile:android:ui:log",
+    ":mobile:android:ui:permissions",
+    ":mobile:android:ui:contacts",
+    ":mobile:android:app",
+    ":mobile:android:app:deps",
 )

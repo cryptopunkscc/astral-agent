@@ -19,7 +19,8 @@ kotlin {
     sourceSets {
         val jvmMain by getting {
             dependencies {
-                implementation(project(":common"))
+                implementation(project(":client"))
+//                implementation(project(":common"))
                 implementation(compose.desktop.currentOs)
 
                 // https://github.com/dorkbox/SystemTray/issues/181

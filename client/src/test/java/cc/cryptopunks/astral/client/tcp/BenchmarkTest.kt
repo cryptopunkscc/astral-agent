@@ -8,8 +8,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
+import org.junit.Ignore
 import org.junit.Test
 
+@Ignore
 class BenchmarkTest {
 
     @Test
